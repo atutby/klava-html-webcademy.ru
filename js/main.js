@@ -9,7 +9,7 @@
 
     const lines = getLines(text)
 
-    let letterId = 50 // актуальный символ
+    let letterId = 1 // актуальный символ
 
     init()
 

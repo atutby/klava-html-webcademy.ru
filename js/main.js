@@ -1,24 +1,76 @@
 ; (function () {
-    const text = `Сайт рыбатекст поможет дизайнеру, верстальщику, вебмастеру сгенерировать несколько абзацев более менее осмысленного текста рыбы на русском языке, а начинающему оратору отточить навык публичных выступлений в домашних условиях. При создании генератора мы использовали небезизвестный универсальный код речей. Текст генерируется абзацами случайным образом от двух до десяти предложений в абзаце, что позволяет сделать текст более привлекательным и живым для визуально-слухового восприятия.
-    По своей сути рыбатекст является альтернативой традиционному lorem ipsum, который вызывает у некторых людей недоумение при попытках прочитать рыбу текст. В отличии от lorem ipsum, текст рыба на русском языке наполнит любой макет непонятным смыслом и придаст неповторимый колорит советских времен.`
+    const text = `рыба текст\\ поможет
+дизайнеру, верстальщику, вебмастеру сгенерировать несколько абзацев
+более менее осмысленного текста рыбы на русском языке, а начинающему оратору отточить навык публичных выступлений в домашних условиях. При создании генератора мы использовали небезизвестный универсальный код речей. Текст генерируется абзацами случайным образом от двух до десяти предложений в абзаце, что позволяет сделать текст более привлекательным и живым для визуально-слухового восприятия.
+По своей сути рыбатекст является альтернативой традиционному lorem ipsum, который вызывает у некторых людей недоумение при попытках прочитать рыбу текст. В отличии от lorem ipsum, текст рыба на русском языке наполнит любой макет непонятным смыслом и придаст неповторимый колорит советских времен.`
 
     const inputElement = document.querySelector('#input')
     const textExampleElement = document.querySelector('#textExample')
 
     const lines = getLines(text)
 
-    let letterId = 1 // актуальный символ
+    let letterId = 50 // актуальный символ
 
-    update()
+    init()
 
-    inputElement.addEventListener('keydown', function (event) {
-        const currentLetter = getCurrentLetter()
+    function init() {
+        update()
 
-        if (event.key === currentLetter.label) {
-            letterId = letterId + 1
-            update()
-        }
-    })
+        inputElement.focus()
+
+        inputElement.addEventListener('keydown', function (event) {
+            console.log(event.code, event.key);
+
+            const currentLineNumber = getCurrentLineNumber()
+            const element = document.querySelector(`[data-key="${event.key}"]`)
+            const elementCode = document.querySelector(`[data-code="${event.code}"]`)
+
+            const currentLetter = getCurrentLetter()
+
+            if (event.key.startsWith('F') && event.key.length > 1) {
+                return
+            }
+
+            if (element) {
+                element.classList.add('hint')
+            }
+            if (elementCode) {
+                elementCode.classList.add('hint')
+            }
+
+            const isKey = event.key === currentLetter.original
+            const isEnter = event.key === 'Enter' && currentLetter.original === '\n'
+
+            if (isKey || isEnter) {
+                letterId = letterId + 1
+                update()
+            }
+            else {
+                event.preventDefault() // отменить стандартную обработку события
+            }
+
+            if (currentLineNumber !== getCurrentLineNumber()) {
+                inputElement.value = ''
+                event.preventDefault()
+            }
+        })
+
+        inputElement.addEventListener('keyup', function (event) {
+            const element = document.querySelector(`[data-key="${event.key}"]`)
+            const elementCode = document.querySelector(`[data-code="${event.code}"]`)
+
+            if (element) {
+                element.classList.remove('hint')
+            }
+            if (elementCode) {
+                elementCode.classList.remove('hint')
+            }
+        })
+
+    }
+
+
+
 
     // Принимает длинную строку, возвращает массив строк со служебной информацией
     function getLines(text) {
@@ -26,17 +78,27 @@
 
         let line = []
         let idCounter = 0
-        for (const letter of text) {
-
+        for (const originalLetter of text) {
             idCounter = idCounter + 1
+
+            let letter = originalLetter
+
+            if (letter === ' ') {
+                letter = 'º'
+            }
+
+            if (letter === '\n') {
+                letter = '¶\n'
+            }
 
             line.push({
                 id: idCounter,
                 label: letter,
+                original: originalLetter,
                 success: true
             })
 
-            if (line.length >= 70 || letter === '\n') {
+            if (line.length >= 70 || letter === '¶\n') {
                 lines.push(line)
                 line = []
             }

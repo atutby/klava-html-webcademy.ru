@@ -1,5 +1,5 @@
 ; (function () {
-    const text = `рыба текст\\ поможет
+    const text = `Рыба ТЕКСТ поможет
 дизайнеру, верстальщику, вебмастеру сгенерировать несколько абзацев
 более менее осмысленного текста рыбы на русском языке, а начинающему оратору отточить навык публичных выступлений в домашних условиях. При создании генератора мы использовали небезизвестный универсальный код речей. Текст генерируется абзацами случайным образом от двух до десяти предложений в абзаце, что позволяет сделать текст более привлекательным и живым для визуально-слухового восприятия.
 По своей сути рыбатекст является альтернативой традиционному lorem ipsum, который вызывает у некторых людей недоумение при попытках прочитать рыбу текст. В отличии от lorem ipsum, текст рыба на русском языке наполнит любой макет непонятным смыслом и придаст неповторимый колорит советских времен.`
@@ -11,19 +11,46 @@
 
     let letterId = 1 // актуальный символ
 
+    let startMoment = null
+    let started = false
+
+    let letterCounter = 0
+    let letterCounter_error = 0
+
     init()
+
+    focusPocus();
+
+    function focusPocus() {
+        const bodyElement = document.querySelector('body')
+        bodyElement.tabIndex
+        bodyElement.addEventListener('keydown', function (event) {
+            inputElement.focus();
+            event.stopPropagation();
+        })
+    }
 
     function init() {
         update()
 
         inputElement.focus()
 
+
         inputElement.addEventListener('keydown', function (event) {
             console.log(event.code, event.key);
 
             const currentLineNumber = getCurrentLineNumber()
-            const element = document.querySelector(`[data-key="${event.key}"]`)
+            const element = document.querySelector(`[data-key="${event.key.toLowerCase()}"]`)
             const elementCode = document.querySelector(`[data-code="${event.code}"]`)
+
+            if (event.key !== 'Shift' && event.key !== 'CapsLock') {
+                letterCounter = letterCounter + 1
+            }
+
+            if (!started) {
+                started = true
+                startMoment = Date.now()
+            }
 
             const currentLetter = getCurrentLetter()
 
@@ -31,9 +58,15 @@
                 return
             }
 
-            if (element) {
+            // отдельно обрабатываем CapsLock
+            if (element && !element.classList.contains("hint")) {
                 element.classList.add('hint')
+            } else {
+                if (element) {
+                    element.classList.remove('hint')
+                }
             }
+
             if (elementCode) {
                 elementCode.classList.add('hint')
             }
@@ -47,23 +80,50 @@
             }
             else {
                 event.preventDefault() // отменить стандартную обработку события
+
+                if (event.key !== 'Shift' && event.key !== 'CapsLock') {
+                    letterCounter_error = letterCounter_error + 1
+
+                    for (const line of lines) {
+                        for (const letter of line) {
+                            if (letter.original === currentLetter.original) {
+                                letter.success = false
+                            }
+                        }
+                    }
+                }
+
+                update()
             }
 
             if (currentLineNumber !== getCurrentLineNumber()) {
                 inputElement.value = ''
                 event.preventDefault()
+
+                const time = Date.now() - startMoment
+                console.log(time);
+
+                document.querySelector('#wordsSpeed').textContent = Math.round(60000 * letterCounter / time)
+                document.querySelector('#errorProcent').textContent = Math.floor(10000 * letterCounter_error / letterCounter) / 100 + '%'
+
+                started = false
+                letterCounter = 0
+                letterCounter_error = 0
             }
         })
 
         inputElement.addEventListener('keyup', function (event) {
-            const element = document.querySelector(`[data-key="${event.key}"]`)
+            const element = document.querySelector(`[data-key="${event.key.toLowerCase()}"]`)
             const elementCode = document.querySelector(`[data-code="${event.code}"]`)
 
-            if (element) {
-                element.classList.remove('hint')
-            }
-            if (elementCode) {
-                elementCode.classList.remove('hint')
+            // отдельно обрабатываем CapsLock
+            if (event.key.toLowerCase() !== 'capslock') {
+                if (element) {
+                    element.classList.remove('hint')
+                }
+                if (elementCode) {
+                    elementCode.classList.remove('hint')
+                }
             }
         })
 
@@ -124,6 +184,10 @@
 
             if (letterId > letter.id) {
                 spanElement.classList.add('done')
+            }
+
+            else if (!letter.success) {
+                spanElement.classList.add('hint')
             }
         }
 

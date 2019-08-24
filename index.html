@@ -8,7 +8,6 @@
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
 	<link href="https://fonts.googleapis.com/css?family=PT+Mono&display=swap&subset=cyrillic-ext" rel="stylesheet">
-
 </head>
 
 <body>
@@ -28,14 +27,14 @@
 						<i class="fas fa-tachometer-alt"></i>
 					</div>
 					<div class="indicator__name">Символов в минуту:</div>
-					<div class="indicator__value">266</div>
+					<div class="indicator__value" id="wordsSpeed">-</div>
 				</div>
 				<div class="indicator">
 					<div class="indicator__icon indicator__icon--errors">
 						<i class="fas fa-exclamation-circle"></i>
 					</div>
 					<div class="indicator__name">Ошибок:</div>
-					<div class="indicator__value">1.41%</div>
+					<div class="indicator__value" id="errorProcent">-</div>
 				</div>
 			</div>
 		</div>
@@ -44,7 +43,7 @@
 	</div>
 	<!-- // Logo and Results -->
 
-	<div class="devider"></div>
+	<!-- <div class="devider"></div> -->
 
 	<div class="container">
 
@@ -77,7 +76,7 @@
 		<!-- Keyboard -->
 		<div class="keyboard">
 			<div class="line">
-				<div>Ё</div>
+				<div data-key="ё">Ё</div>
 				<div data-key="1">1</div>
 				<div data-key="2">2</div>
 				<div data-key="3">3</div>
@@ -90,10 +89,10 @@
 				<div data-key="0">0</div>
 				<div data-key="-">-</div>
 				<div data-key="+">+</div>
-				<div class="backspace" data-key="Backspace">Backspace</div>
+				<div class="backspace" data-key="backspace">Backspace</div>
 			</div>
 			<div class="line">
-				<div class="tab" data-key="Tab">Tab</div>
+				<div class="tab" data-key="tab">Tab</div>
 				<div data-key="й">Й</div>
 				<div data-key="ц">Ц</div>
 				<div data-key="у">У</div>
@@ -109,7 +108,7 @@
 				<div data-key="\" data-code="Backslash">\</div>
 			</div>
 			<div class="line">
-				<div class="caps" data-key="CapsLock">Caps Lock</div>
+				<div class="caps" data-key="capslock">Caps Lock</div>
 				<div data-key="ф">Ф</div>
 				<div data-key="ы">Ы</div>
 				<div data-key="в">В</div>
@@ -121,7 +120,7 @@
 				<div data-key="д">Д</div>
 				<div data-key="ж">Ж</div>
 				<div data-key="э">Э</div>
-				<div class="enter" data-key="Enter">Enter</div>
+				<div class="enter" data-key="enter">Enter</div>
 			</div>
 			<div class="line">
 				<div class="shift" data-code="ShiftLeft">Shift</div>
@@ -139,18 +138,18 @@
 			</div>
 			<div class="line">
 				<div class="space" data-key=" "></div>
-				<div class="alt" data-key="Alt">Alt</div>
+				<div class="alt" data-key="alt">Alt</div>
 			</div>
 		</div>
 		<!-- // Keyboard -->
 	</div>
 
-	<div class="devider"></div>
+	<!-- <div class="devider"></div> -->
 	<div class="container">
 		<!-- Copyright -->
 		<div class="copyright">
-			<p>Проект сделал [Ваше имя] [Ваша фамилия] в рамках интенсива по JS в <a href="https://vk.com/webcademy"
-					target="_blank">WebCademy.ru</a></p>
+			<p>Проект сделал <a href="https://vk.com/webvo" target="_blank">Александр Головач</a> в рамках интенсива по
+				JS в <a href="https://vk.com/webcademy" target="_blank">WebCademy.ru</a></p>
 		</div>
 		<!-- // Copyright -->
 	</div>

@@ -24,9 +24,8 @@
     function focusPocus() {
         const bodyElement = document.querySelector('body')
         bodyElement.tabIndex
-        bodyElement.addEventListener('keydown', function (event) {
+        bodyElement.addEventListener('keyup', function (event) {
             inputElement.focus();
-            event.stopPropagation();
         })
     }
 
@@ -37,7 +36,7 @@
 
 
         inputElement.addEventListener('keydown', function (event) {
-            console.log(event.code, event.key);
+            // console.log(event);
 
             const currentLineNumber = getCurrentLineNumber()
             const element = document.querySelector(`[data-key="${event.key.toLowerCase()}"]`)
@@ -101,7 +100,6 @@
                 event.preventDefault()
 
                 const time = Date.now() - startMoment
-                console.log(time);
 
                 document.querySelector('#wordsSpeed').textContent = Math.round(60000 * letterCounter / time)
                 document.querySelector('#errorProcent').textContent = Math.floor(10000 * letterCounter_error / letterCounter) / 100 + '%'

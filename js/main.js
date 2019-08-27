@@ -1,7 +1,7 @@
 ; (function () {
     const text = `Рыба ТЕКСТ поможет
-дизайнеру, верстальщику, вебмастеру сгенерировать несколько абзацев
-более менее осмысленного текста рыбы на русском языке, а начинающему оратору отточить навык публичных выступлений в домашних условиях. При создании генератора мы использовали небезизвестный универсальный код речей. Текст генерируется абзацами случайным образом от двух до десяти предложений в абзаце, что позволяет сделать текст более привлекательным и живым для визуально-слухового восприятия.
+дизайнеру, верстальщику, вебмастеру сгенерировать
+несколько абзацев более менее осмысленного текста рыбы на русском языке, а начинающему оратору отточить навык публичных выступлений в домашних условиях. При создании генератора мы использовали небезизвестный универсальный код речей. Текст генерируется абзацами случайным образом от двух до десяти предложений в абзаце, что позволяет сделать текст более привлекательным и живым для визуально-слухового восприятия.
 По своей сути рыбатекст является альтернативой традиционному lorem ipsum, который вызывает у некторых людей недоумение при попытках прочитать рыбу текст. В отличии от lorem ipsum, текст рыба на русском языке наполнит любой макет непонятным смыслом и придаст неповторимый колорит советских времен.`
 
     const inputElement = document.querySelector('#input')
@@ -19,19 +19,16 @@
 
     init()
 
-    /*     Задачка посложенее чем фокус для vk!))
-        Получилось с дубляжом: второе нажатие
-        обработает символ! + сделал залипание CapsLock */
-
-    focusPocus();
-
-    function focusPocus() {
-        const bodyElement = document.querySelector('body')
-        bodyElement.tabIndex
-        bodyElement.addEventListener('keyup', function (event) {
-            inputElement.focus();
-        })
+    // Установка фокуса на элементе ученика "5ВП"
+    function setFocus(event) {
+        if (inputElement !== document.activeElement) {
+            inputElement.focus()
+            inputElement.dispatchEvent(new KeyboardEvent(event.type, event))
+        }
     }
+    inputElement.addEventListener('focusout', () => {
+        document.addEventListener('keydown', setFocus)
+    })
 
     function init() {
         update()
@@ -132,8 +129,6 @@
     }
 
 
-
-
     // Принимает длинную строку, возвращает массив строк со служебной информацией
     function getLines(text) {
         const lines = [];
@@ -174,6 +169,7 @@
         return lines
     }
 
+    // Принимает строку с объектами со служебной информацией и возвращает html-структуру
     function lineToHtml(line) {
         const divElement = document.createElement('div')
         divElement.classList.add('line')
@@ -197,10 +193,11 @@
 
     }
 
+    // Возвращает актуальный номер строки
     function getCurrentLineNumber() {
         for (let i = 0; i < lines.length; i++) {
             for (const letter of lines[i]) {
-                if (letter.id === letterId) {
+                if (letterId === letter.id) {
                     return i
                 }
             }
